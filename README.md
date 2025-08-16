@@ -13,19 +13,56 @@ A Streamlit application that uses **LangChain** + **Azure OpenAI GPT-4o-mini** t
 - Streamlit UI for easy text input & result viewing  
 
 ---
+## 🖼 System Architecture
 
-## 📊 Flow
 ```mermaid
 flowchart TD
-    A[User Text / Image] --> B[Streamlit UI]
-    B --> C[Security Check: Sanitize + Safety Check]
-    C --> D{Image Provided?}
-    D -->|Yes| E[Classify Body Type using CV]
-    D -->|No| F[Skip Image Classification]
-    E --> G[LangChain LLM → JSON]
-    F --> G[LangChain LLM → JSON]
-    G --> H[Output JSON + Image to User]
-    H --> I[Send JSON + Image to Specific Email]
+    subgraph UI["Streamlit UI"]
+        A[User Input: Text / Image]
+        B[Process Button]
+        C[Display JSON + Image]
+        D[Download JSON]
+    end
+
+    subgraph Security["Security Layer"]
+        E[Sanitize Input]
+        F[Safety Check]
+    end
+
+    subgraph Classifier["Image Classifier"]
+        G[Dummy Function → Predict Car Type]
+    end
+
+    subgraph LLM["Azure OpenAI (via LangChain)"]
+        H[Generate JSON]
+        I[Validate Schema]
+        J[Retry / Fix JSON if invalid]
+    end
+
+    subgraph Email["Email Service"]
+        K[Validate Recipient Email]
+        L[Send JSON + Image via SMTP]
+    end
+
+    %% Connections
+    A --> E
+    E --> F
+    F --> B
+    B -->|If Image| G
+    B -->|If No Image| H
+    G --> H
+    H --> I --> J --> C
+    C --> D
+    C --> K --> L
+
+This diagram illustrates the **main components** and how they interact:
+
+- **UI** → takes text/image input  
+- **Security** → sanitizes & validates input  
+- **Classifier** → dummy body type classifier (future implementation)  
+- **LLM** → generates & validates JSON schema, retries if needed  
+- **Email Service** → validates email, sends JSON + image  
+
 ---
 🛠 Configuration
 Update config.py with your settings.
