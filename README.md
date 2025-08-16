@@ -28,9 +28,13 @@ Enter your email and app password
 ## 🛠 Installation
 Run these commands in your terminal
 1. Install dependencies
+   
 pip install -r requirements.txt
+
 2.Start Streamlit
+
 streamlit run app.py
+
 ## 🖼 System Architecture
 
 ```mermaid
