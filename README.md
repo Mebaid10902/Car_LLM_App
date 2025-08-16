@@ -12,7 +12,7 @@ flowchart TD
     E --> G[LLM via LangChain Azure OpenAI]
     F --> G
 
-    G --> H[Schema Validation]
+    G --> H[Schema Validation and Retry if Invalid]
     H --> I[Show JSON and Image in UI]
     I --> J[Download JSON]
     I --> K[Validate Email]
