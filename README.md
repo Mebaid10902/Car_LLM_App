@@ -8,7 +8,7 @@ A Streamlit application that uses **LangChain** + **Azure OpenAI GPT-4o-mini** t
 - Converts free-form text into a structured JSON format
 - Uses Azure OpenAI GPT models via LangChain
 - Prevent Prompt Injection
-- Process text processed into a structured JSON format.
+- Process text and force search for all fields in the schema then processed into a structured JSON format.
 - 📌 JSON Parsing with Retry Logic
    - Extract JSON block
    - Clean JSON string
