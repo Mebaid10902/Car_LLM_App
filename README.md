@@ -28,25 +28,25 @@ A Streamlit application that uses **LangChain** + **Azure OpenAI GPT-4o-mini** t
 Add Configurations in config.py
 ## Generate app password
 To generate app password for gmail account follow these steps.
-Open your gmail 
-Go to Manage Your Account
-Go to Security
-Open 2-Step Verification and turn on
-Go back and search for App password
-Enter App name like CarApp
-Copy your 16 key (remove spaces after you copy it)
-Go to config.py
-Enter your email and app password
-
+- Open your gmail 
+- Go to Manage Your Account
+- Go to Security
+- Open 2-Step Verification and turn on
+- Go back and search for App password
+- Enter App name like CarApp
+- Copy your 16 key (remove spaces after you copy it)
+- Go to config.py
+- Enter your email and app password
+  
 ## 🛠 Installation
 Run these commands in your terminal
 Install dependencies
    
-pip install -r requirements.txt
+- pip install -r requirements.txt
 
 Start Streamlit
 
-streamlit run app.py
+- streamlit run app.py
 
 ## 🖼 System Architecture
 
