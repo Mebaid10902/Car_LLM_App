@@ -1,0 +1,173 @@
+You are an expert Python developer specializing in AI and LLM-powered applications.
+Your task is to build a Streamlit web application that accepts either a car text description or an image of a car from the user, then produces a validated JSON according to the schema below. The JSON and the uploaded image must then be emailed to a recipient, after verifying the email address.
+
+Functional Requirements
+
+User Interface (Streamlit)
+
+Provide:
+
+A text area for car description input.
+
+An image uploader for car image (PNG, JPG, JPEG).
+
+A text input for recipient email.
+
+A "Process" button that triggers the workflow.
+
+Display both:
+
+The parsed JSON.
+
+The uploaded image.
+
+Provide a download button for the JSON file.
+
+Security Layer
+
+Implement an input sanitization function in security.py:
+
+Strip or reject malicious content (e.g., HTML, JavaScript, SQL injection).
+
+Detect and block prompt injection attempts.
+
+Ensure uploaded files are strictly validated for type/extension.
+
+Image Processing
+
+Create a dummy classifier function in classifier.py:
+
+Input: uploaded image path.
+
+Output: "car_type": "dummy_prediction".
+
+This value should be passed as a hint to the LLM.
+
+Do not implement real ML — another engineer will replace the dummy.
+
+LLM Processing
+
+Use Azure OpenAI GPT model via LangChain (AzureChatOpenAI).
+
+Task: Convert the description + classifier hint into JSON strictly matching the schema.
+
+If the output is invalid JSON:
+
+Retry with a “Fix JSON” prompt until valid.
+
+Limit retries to 3 attempts.
+
+Schema Validation
+
+The output JSON must strictly follow this schema:
+
+{
+
+    "car": {
+
+      "body_type":"sedan",
+
+      "color": "Blue",
+
+      "brand": "Ford",
+
+      "model": "Fusion",
+
+      "manufactured_year": 2015,
+
+      "motor_size_cc": 2000,
+
+      "tires": {
+
+        "type": "brand-new",
+
+        "manufactured_year": 2022
+
+      },
+
+      "windows": "tinted",
+
+      "notices": [
+
+        {
+
+          "type": "collision",
+
+          "description": "The rear bumper has been replaced after a minor collision."
+
+        }
+
+      ],
+
+      "price": {
+
+        "amount": 1000000,
+
+        "currency": "L.E"
+
+      }
+
+    }
+
+}
+
+
+If validation fails, retry the LLM with corrective instructions.
+
+Email Sending
+
+Validate email using email_validator library.
+
+Use emailer.py to:
+
+Send JSON + image as attachments via SMTP (Gmail).
+
+Use credentials stored in config.py.
+
+If email sending fails:
+
+Log the error.
+
+Display error message in Streamlit.
+
+Design & Implementation Requirements
+
+Use asyncio for all async tasks (LLM calls, email sending).
+
+Module structure:
+
+app.py → Streamlit UI
+
+security.py → sanitization & safety checks
+
+classifier.py → dummy image classification
+
+process.py → LLM calls & JSON validation
+
+emailer.py → email sending with attachments
+
+config.py → API keys, SMTP settings
+
+Add logging for all major steps:
+
+JSON validation failures
+
+Email send success/failure
+
+Security warnings
+
+Add README.md:
+
+Setup instructions
+
+Required environment variables
+
+Run instructions (streamlit run app.py)
+
+Code must be:
+
+Fully documented with docstrings
+
+Type-annotated
+
+Production-ready
