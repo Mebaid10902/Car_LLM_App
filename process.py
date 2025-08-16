@@ -84,7 +84,8 @@ async def process_description_to_json(description: str, image_file=None) -> dict
     - Output must be valid JSON.
     - Output must follow the schema.
     - Include all required fields.
-    - If any field not mentioned in text try to search about it and get it
+    - If a field is missing from the input, infer it based on known specifications of the car (e.g., using the brand, model, and year to deduce common values).   
+    - Do not invent unrealistic values — only infer fields that are reasonable based on real car specs.
     - No extra keys, comments, or text outside the JSON.
     """
     if body_type_hint:
