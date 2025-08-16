@@ -84,6 +84,7 @@ async def process_description_to_json(description: str, image_file=None) -> dict
     - Output must be valid JSON.
     - Output must follow the schema.
     - Include all required fields.
+    - If any field not mentioned in text try to search about it and get it
     - No extra keys, comments, or text outside the JSON.
     """
     if body_type_hint:
