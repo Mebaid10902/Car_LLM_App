@@ -10,7 +10,9 @@ flowchart TD
     D -->|No| F[Skip Image Classification]
 
     E --> G[LLM via LangChain Azure OpenAI]
-    F --> H
+    F --> G
+
+    G --> H[Schema Validation]
     H --> I[Show JSON and Image in UI]
     I --> J[Download JSON]
     I --> K[Validate Email]
