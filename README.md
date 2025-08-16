@@ -59,7 +59,7 @@ Start Streamlit
 
 ```mermaid
 flowchart TD
-    A[User Input: Text and Image (Optional)] --> B[Streamlit UI]
+    A[User Input: Text and Image -Optional] --> B[Streamlit UI]
     B --> C[Security Layer: Sanitize and Safety Check]
     C --> D{Image Provided?}
 
