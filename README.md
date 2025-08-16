@@ -2,8 +2,8 @@
 
 To get a local copy up and running, run:
 
-git clone https://github.com/Mebaid10902/Car_LLM_App.git
-cd Car_LLM_App
+- git clone https://github.com/Mebaid10902/Car_LLM_App.git
+- cd Car_LLM_App
 
 # CAR LLM App
 
