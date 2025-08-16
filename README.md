@@ -8,12 +8,25 @@ A Streamlit application that uses **LangChain** + **Azure OpenAI GPT-4o-mini** t
 - Converts free-form text into a structured JSON format
 - Uses Azure OpenAI GPT models via LangChain
 - Prevent Prompt Injection
+- Process text processed into a structured JSON format.
+- 📌 JSON Parsing with Retry Logic
+   Extract JSON block
+   Clean JSON string
+   Ensure valid formatting
+   Try parsing with if successful → return result
+   If parsing fails
+   Log the error
+   Ask the LLM to fix the JSON by sending the invalid output back with an instruction:
+   Retry parsing with the LLM’s corrected JSON
+   Max retries (default = 3)
+   After 3 failed attempts, raise an error  
 - Send the Data via Email
 - Streamlit UI for easy text input & viewing of results
 
 ## 🛠 Configuration
 
-1. Add Configurations in config.py
+Add Configurations in config.py
+## Generate app password
 To generate app password for gmail account follow these steps.
 Open your gmail 
 Go to Manage Your Account
