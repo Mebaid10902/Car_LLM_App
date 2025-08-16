@@ -7,7 +7,7 @@ from langchain.prompts import (
     HumanMessagePromptTemplate
 )
 from config import AZURE_DEPLOYMENT_NAME, AZURE_ENDPOINT, AZURE_OPENAI_KEY
-from security import sanitize_input, is_safe
+from security import sanitize_input, is_safe, flagged_words  # enhanced versions
 from classifier import classify_car_type
 
 # Initialize Azure GPT-4o mini
@@ -16,7 +16,7 @@ llm = AzureChatOpenAI(
     api_key=AZURE_OPENAI_KEY,
     deployment_name=AZURE_DEPLOYMENT_NAME,
     api_version="2025-01-01-preview",
-    temperature=0
+    temperature=0.1
 )
 
 async def process_description_to_json(description: str, image_file=None) -> dict:
@@ -24,15 +24,16 @@ async def process_description_to_json(description: str, image_file=None) -> dict
     Convert a raw car listing description into structured JSON with a top-level "car" key.
     If an image is provided, use the classifier to detect the body_type and pass it as a hint to the GPT.
     """
+    # --- Step 0: Check safety using enhanced fuzzy-safe functions ---
     if not is_safe(description):
-        raise ValueError("Description contains unsafe content.")
+        unsafe_terms = flagged_words(description)
+        raise ValueError(f"Description contains unsafe content: {unsafe_terms}")
 
     clean_desc = sanitize_input(description).strip()
 
     # --- Step 1: Get body_type from image if provided ---
     body_type_hint = None
     if image_file is not None:
-        # Save the uploaded file temporarily for the classifier
         body_type_hint = classify_car_type(image_file)
 
     # --- Step 2: System & Human prompt ---
