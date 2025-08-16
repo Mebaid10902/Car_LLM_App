@@ -27,11 +27,11 @@ Enter your email and app password
 
 ## 🛠 Installation
 Run these commands in your terminal
-1. Install dependencies
+Install dependencies
    
 pip install -r requirements.txt
 
-2.Start Streamlit
+Start Streamlit
 
 streamlit run app.py
 
