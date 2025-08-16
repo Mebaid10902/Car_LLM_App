@@ -9,7 +9,7 @@ from email import encoders
 from config import GMAIL_ADDRESS, GMAIL_APP_PASSWORD
 from typing import List, Optional
 from email_validator import validate_email, EmailNotValidError
-
+import re
 
 # -------------------------------
 # Setup logging
@@ -19,21 +19,25 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s",
 )
 
-
 # -------------------------------
-# Email Validation
+# Email Validation (@something.com)
 # -------------------------------
 def validate_and_normalize_email(email: str) -> str:
     """
     Validate and normalize an email address.
-    Raises ValueError if invalid.
+    Only allows addresses like something@domain.com
     """
     try:
         valid = validate_email(email)
-        return valid.email  # returns normalized (lowercased, unicode-safe)
+        normalized = valid.email.lower()  # normalize to lowercase
+
+        # Regex: must be like @<one or more chars>.com
+        if not re.match(r"^[^@]+@[a-zA-Z0-9-]+\.com$", normalized):
+            raise ValueError("Email must be in the format: something@domain.com")
+
+        return normalized
     except EmailNotValidError as e:
         raise ValueError(f"Invalid email: {str(e)}")
-
 
 # -------------------------------
 # Send Email with Attachments
