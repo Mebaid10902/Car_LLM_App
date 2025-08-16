@@ -1,10 +1,3 @@
-## 🚀 Clone the Repository
-
-To get a local copy up and running, run:
-
-- git clone https://github.com/Mebaid10902/Car_LLM_App.git
-- cd Car_LLM_App
-
 # CAR LLM App
 
 A Streamlit application that uses **LangChain** + **Azure OpenAI GPT-4o-mini** to process natural language car-related descriptions into JSON based on a defined schema.
