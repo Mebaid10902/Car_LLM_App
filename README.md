@@ -7,7 +7,6 @@ A Streamlit application that uses **LangChain** + **Azure OpenAI GPT-4o-mini** t
 ## Features
 - Converts free-form text into a structured JSON format
 - Uses Azure OpenAI GPT models via LangChain
-- Schema-based validation to ensure JSON output matches requirements
 - Prevent Prompt Injection
 - Send the Data via Email
 - Streamlit UI for easy text input & viewing of results
