@@ -26,6 +26,7 @@ flowchart TD
     F --> G[LangChain LLM → JSON]
     G --> H[Output JSON + Image to User]
     H --> I[Send JSON + Image to Specific Email]
+---
 🛠 Configuration
 Update config.py with your settings.
 
