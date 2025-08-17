@@ -51,28 +51,18 @@ Start Streamlit
 ## 🖼 System Architecture
 
 flowchart TD
-    A[User Input: Text & Image] --> B[Streamlit UI]
-    B --> C[Security Layer: sanitize_input, is_safe, flagged_words]
+    A[User Input: Text & Image] -> B[Streamlit UI]
+    B -> C[Security Layer: sanitize_input, is_safe, flagged_words]
 
-    C --> D{Image Provided?}
-    D -->|Yes| E[Image Classifier: classify_car_type]
-    D -->|No| F[Skip Image Classification]
+    C -> D{Image Provided?}
+    D ->|Yes| E[Image Classifier: classify_car_type]
+    D ->|No| F[Skip Image Classification]
 
-    E --> G[Guarded LLM Call via Azure OpenAI]
-    F --> G
+    E -> G[Guarded LLM Call via Azure OpenAI]
+    F -> G
 
-    G --> H[JSON Parsing & Retry: max attempts, fix invalid JSON]
-    H --> I[Show JSON & Image in UI]
-    I --> J[Download JSON]
-
-    class C security
-    class E image
-    class G,H llm
-    class A,B,I,J ui
-
-classDef security fill:#f96,stroke:#333,stroke-width:2px,color:white;
-classDef image fill:#6cf,stroke:#333,stroke-width:2px,color:white;
-classDef llm fill:#fc6,stroke:#333,stroke-width:2px,color:white;
-classDef ui fill:#ccc,stroke:#333,stroke-width:2px,color:black;
+    G -> H[JSON Parsing & Retry: max attempts, fix invalid JSON]
+    H -> I[Show JSON & Image in UI]
+    I -> J[Download JSON]
 
 
