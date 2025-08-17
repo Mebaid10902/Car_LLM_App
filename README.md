@@ -50,20 +50,26 @@ Start Streamlit
 
 ## 🖼 System Architecture
 
-```mermaid
 flowchart TD
-    A[User Input: Text and Image ] --> B[Streamlit UI]
-    B --> C[Security Layer: Sanitize and Safety Check]
+    A[User Input: Text and Image] --> B[Streamlit UI]
+    B --> C[Security Layer: 
+        - Sanitize Input
+        - Sentence-level Safety Check (is_safe)
+        - Flagged Words Logging
+        - Save Clean Prompt]
+    
     C --> D{Image Provided?}
-
-    D -->|Yes| E[Image Classifier Dummy Function]
+    D -->|Yes| E[Image Classifier: Detect body_type]
     D -->|No| F[Skip Image Classification]
 
     E --> G[LLM via LangChain Azure OpenAI]
     F --> G
 
-    G --> H[Json parsing and retry if invalid]
+    G --> H[Guarded LLM Call: 
+        - Retry on Invalid JSON
+        - Retry on Unsafe Output
+        - Max Attempts with Backoff
+        - Sanitize Output]
+    
     H --> I[Show JSON and Image in UI]
     I --> J[Download JSON]
-    I --> K[Validate Email]
-    K --> L[Send JSON and Image via SMTP]
