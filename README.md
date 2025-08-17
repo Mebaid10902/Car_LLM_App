@@ -68,13 +68,13 @@ Start Streamlit
 flowchart TD
     A[User Input: Text and Image] --> B[Streamlit UI]
     B --> C[Security Layer: sanitize_input, is_safe, flagged_words]
-    C-->D[Validate email address]
+    C--> D[Validate email address]
     D --> E{Image Provided?}
     E -->|Yes| F[Image Classifier: classify_car_type]
     E -->|No| G[Skip Image Classification]
 
     F --> H[Guarded LLM Call via Azure OpenAI]
-    E --> H
+    G --> H
 
     H --> I[JSON Parsing & Retry: max attempts, fix invalid JSON]
     I --> J[Show JSON & Image in UI]
