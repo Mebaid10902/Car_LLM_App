@@ -76,7 +76,7 @@ flowchart TD
     F --> H[Guarded LLM Call via Azure OpenAI]
     G --> H
 
-    H --> I[JSON Parsing & Retry, ensure safe output and fix invalid JSON]
-    I --> J[Show JSON & Image in UI]
+    H --> I[JSON Parsing and Retry, ensure safe output and fix invalid JSON]
+    I --> J[Show JSON and Image in UI]
     J --> K[Download JSON]
 
