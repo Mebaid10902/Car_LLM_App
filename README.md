@@ -9,7 +9,7 @@ A Streamlit application that uses **LangChain** + **Azure OpenAI GPT-4o-mini** t
 - Uses Azure OpenAI GPT models via LangChain
 - Prevent Prompt Injection
 - Process text and force search for all fields in the schema then processed into a structured JSON format.
-- 📌 JSON Parsing with Retry Logic
+-  JSON Parsing with Retry Logic
    - Extract JSON block
    - Clean JSON string
    - Ensure valid formatting
@@ -51,16 +51,16 @@ Start Streamlit
 ## 🖼 System Architecture
 ```mermaid
 flowchart TD
-    A[📝 User Input: Text and Image] --> B[🖥️ Streamlit UI]
-    B --> C[🔒 Security Layer: sanitize_input, is_safe, flagged_words]
+    A[User Input: Text and Image] --> B[Streamlit UI]
+    B --> C[Security Layer: sanitize_input, is_safe, flagged_words]
 
-    C --> D{🖼️ Image Provided?}
-    D -->|Yes| E[📷 Image Classifier: classify_car_type]
-    D -->|No| F[⏭ Skip Image Classification]
+    C --> D{Image Provided?}
+    D -->|Yes| E[Image Classifier: classify_car_type]
+    D -->|No| F[Skip Image Classification]
 
-    E --> G[🤖 Guarded LLM Call via Azure OpenAI]
+    E --> G[Guarded LLM Call via Azure OpenAI]
     F --> G
 
-    G --> H[🛡️ JSON Parsing & Retry: max attempts, fix invalid JSON]
-    H --> I[📊 Show JSON & Image in UI]
-    I --> J[💾 Download JSON]
+    G --> H[JSON Parsing & Retry: max attempts, fix invalid JSON]
+    H --> I[Show JSON & Image in UI]
+    I --> J[Download JSON]
