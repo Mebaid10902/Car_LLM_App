@@ -4,24 +4,31 @@ A Streamlit application that uses **LangChain** + **Azure OpenAI GPT-4o-mini** t
 
 ---
 
-## Features
-- Converts free-form text into a structured JSON format
-- Uses Azure OpenAI GPT models via LangChain
-- Prevent Prompt Injection
-- Process text and force search for all fields in the schema then processed into a structured JSON format.
--  JSON Parsing with Retry Logic
-   - Extract JSON block
-   - Clean JSON string
-   - Ensure valid formatting
-   - Try parsing with if successful → return result
-   - If parsing fails
-   - Log the error
-   - Ask the LLM to fix the JSON by sending the invalid output back with an instruction:
-   - Retry parsing with the LLM’s corrected JSON
-   - Max retries (default = 3)
-   - After 3 failed attempts, raise an error  
-- Send the Data via Email
-- Streamlit UI for easy text input & viewing of results
+## System Overview
+1- Input Handling
+- Accepts free-form car description text and optional image input.
+- Sanitizes the text using sanitize_input.
+- Checks safety using is_safe and flags dangerous keywords/patterns with flagged_words.
+2- Image Processing (Optional)
+- If an image is provided, the classify_car_type function detects the car’s body type.
+- This body type is used as a hint to guide the LLM in generating structured JSON.
+3- LLM Processing
+- Sends sanitized input and optional body type hints to Azure OpenAI GPT via LangChain.
+- Uses a guarded LLM call (guarded_llm_call) to ensure output safety.
+- Retries the call if unsafe content or invalid JSON is detected.
+4- JSON Parsing & Retry
+- Extracts and validates the JSON output from the LLM.
+- If JSON is invalid:
+   - Logs the error.
+   - Appends a system message instructing the LLM to regenerate safe, valid JSON.
+   - Retries up to MAX_RETRIES (default = 3).
+- Ensures the output has a top-level "car" key.
+5- Output
+- Returns structured JSON with all car fields populated.
+- Output can be displayed in a UI or downloaded for further processing.
+6- Security
+- Prevents prompt injection.
+- Detects and blocks unsafe keywords and patterns in both input and LLM output.
 
 ## 🛠 Configuration
 
