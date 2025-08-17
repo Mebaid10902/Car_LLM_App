@@ -51,25 +51,29 @@ Start Streamlit
 ## 🖼 System Architecture
 
 flowchart TD
-    A[User Input: Text and Image] --> B[Streamlit UI]
-    B --> C[Security Layer: 
-        - Sanitize Input
-        - Sentence-level Safety Check (is_safe)
-        - Flagged Words Logging
-        - Save Clean Prompt]
-    
-    C --> D{Image Provided?}
-    D -->|Yes| E[Image Classifier: Detect body_type]
-    D -->|No| F[Skip Image Classification]
+    %% Node style definitions
+    classDef security fill:#f96,stroke:#333,stroke-width:2px,color:white;
+    classDef image fill:#6cf,stroke:#333,stroke-width:2px,color:white;
+    classDef llm fill:#fc6,stroke:#333,stroke-width:2px,color:white;
+    classDef ui fill:#ccc,stroke:#333,stroke-width:2px,color:black;
 
-    E --> G[LLM via LangChain Azure OpenAI]
+    %% Flowchart nodes
+    A[📝 User Input: Text & Image] --> B[🖥️ Streamlit UI]
+    B --> C[🔒 Security Layer: sanitize_input, is_safe, flagged_words]
+
+    C --> D{🖼️ Image Provided?}
+    D -->|Yes| E[📷 Image Classifier: classify_car_type]
+    D -->|No| F[⏭ Skip Image Classification]
+
+    E --> G[🤖 Guarded LLM Call via Azure OpenAI]
     F --> G
 
-    G --> H[Guarded LLM Call: 
-        - Retry on Invalid JSON
-        - Retry on Unsafe Output
-        - Max Attempts with Backoff
-        - Sanitize Output]
-    
-    H --> I[Show JSON and Image in UI]
-    I --> J[Download JSON]
+    G --> H[🛡️ JSON Parsing & Retry: max attempts, fix invalid JSON]
+    H --> I[📊 Show JSON & Image in UI]
+    I --> J[💾 Download JSON]
+
+    %% Apply styles
+    class C security
+    class E image
+    class G,H llm
+    class A,B,I,J ui
