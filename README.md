@@ -66,8 +66,6 @@ Start Streamlit
 ## 🖼 System Architecture
 ```mermaid
 flowchart TD
-```mermaid
-flowchart TD
     A[User Input: Text and Image] --> B[Streamlit UI]
     B --> C[Security Layer: sanitize_input, is_safe, flagged_words]
     C-->D[Validate email address]
