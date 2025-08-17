@@ -23,10 +23,10 @@ A Streamlit application that uses **LangChain** + **Azure OpenAI GPT-4o-mini** t
    - Appends a system message instructing the LLM to regenerate safe, valid JSON.
    - Retries up to MAX_RETRIES (default = 3).
 - Ensures the output has a top-level "car" key.
-5- Output
+6- Output
 - Returns structured JSON with all car fields populated.
 - Output can be displayed in a UI or downloaded for further processing.
-6- Security
+7- Security
 - Prevents prompt injection.
 - Detects and blocks unsafe keywords and patterns in both input and LLM output.
 
