@@ -78,3 +78,4 @@ flowchart TD
     G --> H[JSON Parsing & Retry: max attempts, fix invalid JSON]
     H --> I[Show JSON & Image in UI]
     I --> J[Download JSON]
+    J --> K[Send image and json file to recipient email]
