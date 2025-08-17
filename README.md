@@ -17,6 +17,7 @@ Image Processing (Optional)
 LLM Processing
 - Sends sanitized input and optional body type hints to Azure OpenAI GPT via LangChain.
 - Uses a guarded LLM call (guarded_llm_call) to ensure output safety.
+- if the output is not safe (guarded_llm_call) send to LLM again to generate save and valid output 
 - Retries the call if unsafe content or invalid JSON is detected.
   
 JSON Parsing & Retry
