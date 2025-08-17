@@ -1,6 +1,6 @@
 # CAR LLM App
 
-A Streamlit application that uses **LangChain** + **Azure OpenAI GPT-4o-mini** to process natural language car-related descriptions into JSON based on a defined schema.
+A Streamlit application that uses **LangChain** + **Azure OpenAI GPT-4o-mini** to process car-related descriptions into JSON based on a defined schema.
 
 ---
 
