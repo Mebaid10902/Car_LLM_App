@@ -68,15 +68,15 @@ Start Streamlit
 flowchart TD
     A[User Input: Text and Image] --> B[Streamlit UI]
     B --> C[Security Layer: sanitize_input, is_safe, flagged_words]
+    C--> D[validate email address]
+    D --> E{Image Provided?}
+    E -->|Yes| F[Image Classifier: classify_car_type]
+    E -->|No| G[Skip Image Classification]
 
-    C --> D{Image Provided?}
-    D -->|Yes| E[Image Classifier: classify_car_type]
-    D -->|No| F[Skip Image Classification]
+    F --> H[Guarded LLM Call via Azure OpenAI]
+    G --> H
 
-    E --> G[Guarded LLM Call via Azure OpenAI]
-    F --> G
-
-    G --> H[JSON Parsing and Retry: ensure safe output, fix invalid JSON]
-    H --> I[Show JSON & Image in UI]
-    I --> J[Download JSON]
-    J --> K[Send image and json file to recipient email]
+    I --> J[JSON Parsing and Retry , ensure safe output and fix invalid JSON]
+    J --> K[Show JSON and Image in UI]
+    K --> L[Download JSON]
+    L --> M[Send image and json file to recipient email]
