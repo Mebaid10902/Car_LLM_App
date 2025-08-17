@@ -1,16 +1,19 @@
 import asyncio
 import json
+import logging
 from langchain_openai import AzureChatOpenAI
 from langchain.prompts import (
     ChatPromptTemplate,
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate
 )
-from config import AZURE_DEPLOYMENT_NAME, AZURE_ENDPOINT, AZURE_OPENAI_KEY
-from security import sanitize_input, is_safe, flagged_words  # enhanced versions
+from langchain.schema import SystemMessage, HumanMessage
+from config import AZURE_DEPLOYMENT_NAME, AZURE_ENDPOINT, AZURE_OPENAI_KEY, MAX_RETRIES 
+from security import sanitize_input, is_safe, flagged_words
 from classifier import classify_car_type
 
-# Initialize Azure GPT-4o mini
+logging.basicConfig(level=logging.INFO)
+
 llm = AzureChatOpenAI(
     azure_endpoint=AZURE_ENDPOINT.rstrip("/"),
     api_key=AZURE_OPENAI_KEY,
@@ -19,24 +22,56 @@ llm = AzureChatOpenAI(
     temperature=0.1
 )
 
+
+async def guarded_llm_call(prompt_messages):
+    """
+    Call LLM safely with retries for unsafe-output and invalid JSON.
+    """
+    for attempt in range(1, MAX_RETRIES + 1):
+        # Check each message for unsafe content
+        for msg in prompt_messages:
+            content = getattr(msg, "content", str(msg))
+            if not is_safe(content):
+                terms = flagged_words(content)
+                logging.warning(f"Unsafe content in prompt: {terms}")
+                raise ValueError(f"Unsafe content detected in prompt: {terms}")
+
+        # Call LLM
+        response = await asyncio.to_thread(llm, messages=prompt_messages)
+        output = sanitize_input(response.content).strip()
+
+        # Check output safety
+        if not is_safe(output):
+            terms = flagged_words(output)
+            logging.warning(f"Unsafe content detected in LLM output: {terms}")
+        else:
+            # Try parsing JSON
+            try:
+                parsed = json.loads(output)
+                return parsed
+            except json.JSONDecodeError:
+                logging.warning(f"Invalid JSON detected. Retry {attempt}/{MAX_RETRIES}")
+
+        # Append system message for retry
+        prompt_messages.append(SystemMessage(content="Previous response was unsafe or invalid JSON. Please regenerate a safe, valid JSON output."))
+
+    terms = flagged_words(output)
+    raise ValueError(f"Failed to get safe JSON after {MAX_RETRIES} retries. Last flagged terms: {terms}")
+
+
 async def process_description_to_json(description: str, image_file=None) -> dict:
     """
-    Convert a raw car listing description into structured JSON with a top-level "car" key.
-    If an image is provided, use the classifier to detect the body_type and pass it as a hint to the GPT.
+    Convert a car text description into structured JSON .
     """
-    # --- Step 0: Check safety using enhanced fuzzy-safe functions ---
+    # Step 0: Input safety
     if not is_safe(description):
         unsafe_terms = flagged_words(description)
         raise ValueError(f"Description contains unsafe content: {unsafe_terms}")
 
     clean_desc = sanitize_input(description).strip()
+    body_type_hint = classify_car_type(image_file) if image_file else None
 
-    # --- Step 1: Get body_type from image if provided ---
-    body_type_hint = None
-    if image_file is not None:
-        body_type_hint = classify_car_type(image_file)
-
-    # --- Step 2: System & Human prompt ---
+    # Step 1: System & human prompts
     system_prompt_text = """
         You are a strict car listing parser.
         Convert the text into JSON with schema like a top-level key called "car".
@@ -60,30 +95,14 @@ async def process_description_to_json(description: str, image_file=None) -> dict
     chat_prompt = ChatPromptTemplate.from_messages([system_prompt, human_prompt])
     final_prompt = chat_prompt.format_prompt(desc=clean_desc)
 
-    # --- Step 3: First GPT call ---
-    response = await asyncio.to_thread(llm, messages=final_prompt.to_messages())
-    raw_json = response.content.strip()
+    # Step 2: Call LLM safely
+    parsed = await guarded_llm_call(final_prompt.to_messages())
 
-    # --- Step 4: Try parsing JSON ---
-    try:
-        parsed = json.loads(raw_json)
-    except json.JSONDecodeError:
-        # Retry GPT to fix invalid JSON
-        retry_prompt = f"Fix this JSON so it has a single top-level 'car' key and is valid:\n{raw_json}"
-        retry_response = await asyncio.to_thread(
-            llm,
-            messages=[
-                {"role": "system", "content": "Return corrected JSON only."},
-                {"role": "user", "content": retry_prompt},
-            ]
-        )
-        raw_json = retry_response.content.strip()
-        parsed = json.loads(raw_json)
-
-    # --- Step 5: Ensure "car" key exists ---
+    # Step 3: Ensure top-level "car" key
     if "car" not in parsed:
         parsed = {"car": parsed}
 
     return parsed
+
 
 __all__ = ["process_description_to_json"]
