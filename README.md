@@ -51,7 +51,6 @@ Start Streamlit
 ## 🖼 System Architecture
 
 flowchart TD
-    %% Nodes
     A[User Input: Text & Image] --> B[Streamlit UI]
     B --> C[Security Layer: sanitize_input, is_safe, flagged_words]
 
@@ -66,15 +65,14 @@ flowchart TD
     H --> I[Show JSON & Image in UI]
     I --> J[Download JSON]
 
-    %% Styles
     class C security
     class E image
     class G,H llm
     class A,B,I,J ui
 
-    %% Class definitions
-    classDef security fill:#f96,stroke:#333,stroke-width:2px,color:white;
-    classDef image fill:#6cf,stroke:#333,stroke-width:2px,color:white;
-    classDef llm fill:#fc6,stroke:#333,stroke-width:2px,color:white;
-    classDef ui fill:#ccc,stroke:#333,stroke-width:2px,color:black;
+classDef security fill:#f96,stroke:#333,stroke-width:2px,color:white;
+classDef image fill:#6cf,stroke:#333,stroke-width:2px,color:white;
+classDef llm fill:#fc6,stroke:#333,stroke-width:2px,color:white;
+classDef ui fill:#ccc,stroke:#333,stroke-width:2px,color:black;
+
 
