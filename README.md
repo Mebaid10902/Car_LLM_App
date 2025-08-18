@@ -64,7 +64,7 @@ Start Streamlit
 - streamlit run app.py
 
 ## video
-Car_App.mp4 show the whole process
+Car_App.mp4 shows the entire process
 ## 🖼 System Architecture
 ```mermaid
 flowchart TD
